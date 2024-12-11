@@ -151,7 +151,7 @@ export default function AdvancedDemo() {
             setFormData({ ...formData, email: e.target.value })
           } />
           <small id="email-help" >
-            Enter your Name. Ex: example@gmail.com
+            Enter your Email. Ex: example@gmail.com
           </small>
         </div>
 
