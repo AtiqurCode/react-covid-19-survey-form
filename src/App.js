@@ -109,7 +109,10 @@ export default function AdvancedDemo() {
   };
 
   return (
-    <div className="surface-0 p-4 shadow-2 border-round">
+    <div
+      className="surface-0 p-4 shadow-2 border-round mx-auto"
+      style={{ maxWidth: "900px", width: "100%" }}
+    >
       {/* <div className="text-3xl font-medium text-900 mb-3">COVID-19 Vaccination Survey</div>
           <div className="font-medium text-500 mb-3">we are interested in your feedback.</div> */}
 
