@@ -126,7 +126,7 @@ export default function AdvancedDemo() {
 
         {/* Description */}
         <div className="font-medium text-500">
-          We are very thankedfull in your contribution.
+          We are very thankedfull for your contribution.
         </div>
       </div>
 
