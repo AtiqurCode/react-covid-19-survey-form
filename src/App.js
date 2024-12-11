@@ -254,7 +254,7 @@ export default function AdvancedDemo() {
 
 
         {/* Submit and Clear Buttons */}
-        <div className="flex gap-3">
+        <div className="flex flex-wrap justify-content-end gap-3">
           <button
             type="button"
             className="p-button p-component p-button-danger"
