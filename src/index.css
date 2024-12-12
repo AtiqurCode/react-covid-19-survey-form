@@ -18,3 +18,39 @@ body {
   border-radius: 10px;
   margin-bottom: 1rem;
 }
+
+.flex-privacy {
+  display: flex;
+  align-items: center;
+  /* Ensures vertical alignment */
+}
+
+.privacy-policy-page {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+}
+
+.privacy-policy-page h1 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.privacy-policy-page p {
+  font-size: 1rem;
+}
+
+.privacy-policy {
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+}
+
+.privacy-policy h1,
+.privacy-policy h2 {
+  color: #333;
+}
+
+.privacy-policy ul {
+  margin-left: 1.5rem;
+  list-style-type: disc;
+}
