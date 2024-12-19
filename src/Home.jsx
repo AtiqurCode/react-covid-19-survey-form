@@ -9,6 +9,7 @@ import { Button } from 'primereact/button';
 import { Link } from 'react-router-dom';
 import { Checkbox } from 'primereact/checkbox';
 import { MultiSelect } from 'primereact/multiselect';
+import { format } from 'date-fns'; // Install date-fns if not already installed
 
 export default function Home() {
 
@@ -18,11 +19,10 @@ export default function Home() {
         date_of_birth: "",
         division: "", // Add division field
         gender: 'Male', // Default value
-        vaccineDoses: null,
+        vaccine_doses: null,
         problems: "",
         symptoms: [],
         vaccinesTaken: [],
-
     });
 
     const genderOptions = [
@@ -98,12 +98,18 @@ export default function Home() {
         { id: 34, value: "Others", label: "Others" },
     ];
 
+    const handleDateChange = (e) => {
+        const formattedDate = format(e.value, 'yyyy-MM-dd'); // Convert date to Y-m-d format
+        setFormData({ ...formData, date_of_birth: formattedDate });
+    };
+    
+
 
     const handleDoseChange = (e) => {
         const doses = e.value;
         setFormData({
             ...formData,
-            vaccineDoses: doses,
+            vaccine_doses: doses,
             vaccinesTaken: Array(doses).fill(""), // Initialize empty selections
         });
     };
@@ -170,14 +176,15 @@ export default function Home() {
                 </div>
 
                 {/* Date of Birth */}
+
                 <div className="flex flex-column gap-2 mb-4">
                     <label htmlFor="dob">Date of Birth</label>
                     <Calendar
                         id="dob"
                         value={formData.date_of_birth}
-                        onChange={(e) => setFormData({ ...formData, date_of_birth: e.value })}
+                        onChange={handleDateChange} // Use the date formatting function
                         placeholder="Select your date of birth"
-                        dateFormat="dd/mm/yy"
+                        dateFormat="yy-mm-dd" // Display format for the input
                         showIcon
                         required
                     />
@@ -230,7 +237,7 @@ export default function Home() {
                                     name="vaccineDoses"
                                     value={option.value}
                                     onChange={(e) => handleDoseChange(e)}
-                                    checked={formData.vaccineDoses === option.value}
+                                    checked={formData.vaccine_doses === option.value}
                                 />
                                 <label htmlFor={`vaccineDose-${option.value}`} className="ml-2">
                                     {option.label}
@@ -307,7 +314,7 @@ export default function Home() {
                                 email: "",
                                 date_of_birth: "",
                                 division: "",
-                                vaccineDoses: null,
+                                vaccine_doses: null,
                                 problems: "",
                                 symptoms: [],
                                 vaccinesTaken: [],
