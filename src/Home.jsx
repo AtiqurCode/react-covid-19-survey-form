@@ -9,7 +9,7 @@ import { Button } from 'primereact/button';
 import { Link } from 'react-router-dom';
 import { Checkbox } from 'primereact/checkbox';
 import { MultiSelect } from 'primereact/multiselect';
-import { format } from 'date-fns'; // Install date-fns if not already installed
+import axios from 'axios';
 
 export default function Home() {
 
@@ -19,7 +19,7 @@ export default function Home() {
         date_of_birth: "",
         division: "", // Add division field
         gender: 'Male', // Default value
-        vaccine_doses: null,
+        vaccine_doses: 0,
         problems: "",
         symptoms: [],
         vaccinesTaken: [],
@@ -98,13 +98,6 @@ export default function Home() {
         { id: 34, value: "Others", label: "Others" },
     ];
 
-    const handleDateChange = (e) => {
-        const formattedDate = format(e.value, 'yyyy-MM-dd'); // Convert date to Y-m-d format
-        setFormData({ ...formData, date_of_birth: formattedDate });
-    };
-    
-
-
     const handleDoseChange = (e) => {
         const doses = e.value;
         setFormData({
@@ -120,10 +113,43 @@ export default function Home() {
         setFormData({ ...formData, vaccinesTaken: updatedVaccines });
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        // Log form data to the console
         console.log("Form Data:", formData);
-        alert("Thank you for completing the survey!");
+
+        // API URL
+        const apiUrl = 'https://covid19.test/api/covid-survey'; // Replace with your API URL
+
+        try {
+            const response = await axios.post(apiUrl, formData, {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            // Handle the API response
+            alert('Thank you for completing the survey!');
+            console.log('Response Data:', response.data);
+
+            // Reset form data
+            setFormData({
+                name: "",
+                email: "",
+                date_of_birth: "",
+                division: "",
+                vaccine_doses: 0,
+                problems: "",
+                symptoms: [],
+                vaccinesTaken: [],
+                gender: "Male",
+            });
+        } catch (error) {
+            console.error('Error:', error);
+            alert('There was an error with your submission.');
+        }
+
+
     };
 
     const handleGenderChange = (e) => {
@@ -154,14 +180,19 @@ export default function Home() {
             </div>
 
             { /* Form start here*/}
-            <form onSubmit={handleSubmit}>
+            <form>
 
                 {/* Name */}
                 <div className="flex flex-column gap-2 mb-4">
                     <label htmlFor="username">Your Name</label>
-                    <InputText id="name" aria-describedby="username-help" value={formData.name} onChange={(e) =>
-                        setFormData({ ...formData, name: e.target.value })
-                    } />
+                    <InputText
+                        id="name"
+                        aria-describedby="username-help"
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        required="true"
+
+                    />
                     <small id="username-help">
                         Enter your Name. Ex: John Doe
                     </small>
@@ -172,19 +203,18 @@ export default function Home() {
                     <label htmlFor="emailLabel">Your Email or Number</label>
                     <InputText id="email" value={formData.email} onChange={(e) =>
                         setFormData({ ...formData, email: e.target.value })
-                    } />
+                    } required />
                 </div>
 
                 {/* Date of Birth */}
-
                 <div className="flex flex-column gap-2 mb-4">
                     <label htmlFor="dob">Date of Birth</label>
                     <Calendar
                         id="dob"
                         value={formData.date_of_birth}
-                        onChange={handleDateChange} // Use the date formatting function
-                        placeholder="Select your date of birth"
-                        dateFormat="yy-mm-dd" // Display format for the input
+                        onChange={(e) => setFormData({ ...formData, date_of_birth: e.target.value })} // Use the date formatting function
+                        placeholder="Select your birth date"
+                        dateFormat="yy/mm/dd" // Display format for the input
                         showIcon
                         required
                     />
@@ -314,7 +344,7 @@ export default function Home() {
                                 email: "",
                                 date_of_birth: "",
                                 division: "",
-                                vaccine_doses: null,
+                                vaccine_doses: 0,
                                 problems: "",
                                 symptoms: [],
                                 vaccinesTaken: [],
@@ -324,7 +354,7 @@ export default function Home() {
                     >
                         Clear
                     </button>
-                    <button type="submit" className="p-button p-component">
+                    <button onClick={handleSubmit} className="p-button p-component">
                         Submit
                     </button>
                 </div>
