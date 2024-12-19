@@ -7,6 +7,8 @@ import { Calendar } from "primereact/calendar";
 import { RadioButton } from "primereact/radiobutton";
 import { Button } from 'primereact/button';
 import { Link } from 'react-router-dom';
+import { Checkbox } from 'primereact/checkbox';
+import { MultiSelect } from 'primereact/multiselect';
 
 export default function Home() {
 
@@ -15,11 +17,19 @@ export default function Home() {
         email: "",
         date_of_birth: "",
         division: "", // Add division field
+        gender: 'Male', // Default value
         vaccineDoses: null,
         problems: "",
-        symptom: "",
+        symptoms: [],
         vaccinesTaken: [],
+
     });
+
+    const genderOptions = [
+        { value: 'Male', label: 'Male' },
+        { value: 'Female', label: 'Female' },
+        { value: 'Others', label: 'Others' },
+    ];
 
     const vaccineOptions = [
         { label: "None", value: 0, key: 1 },
@@ -110,6 +120,10 @@ export default function Home() {
         alert("Thank you for completing the survey!");
     };
 
+    const handleGenderChange = (e) => {
+        setFormData({ ...formData, gender: e.value });
+    };
+
     return (
 
         <div
@@ -169,6 +183,27 @@ export default function Home() {
                     />
                 </div>
 
+                {/* Gender Checkbox */}
+                <div className="flex flex-column gap-2 mb-4">
+                    <label htmlFor="gender">Gender</label>
+                    <div id="gender">
+                        {genderOptions.map((genderOption) => (
+                            <div key={genderOption.value} className="flex mb-3">
+                                <Checkbox
+                                    inputId={`gender-${genderOption.value}`}
+                                    name="gender"
+                                    value={genderOption.value}
+                                    onChange={(e) => handleGenderChange(e)}
+                                    checked={formData.gender === genderOption.value}
+                                />
+                                <label htmlFor={`gender-${genderOption.value}`} className="ml-2">
+                                    {genderOption.label}
+                                </label>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
                 {/* Division Dropdown */}
                 <div className="flex flex-column gap-2 mb-4">
                     <label htmlFor="division">Your Division</label>
@@ -226,18 +261,19 @@ export default function Home() {
                     <label htmlFor="symptomHelp">
                         What are your symptoms after the vaccine?
                     </label>
-                    <Dropdown
+                    <MultiSelect
                         id="symptomHelp"
-                        value={formData.symptom}
+                        value={formData.symptoms} // Updated for multiple selection
                         options={symptomOptions}
                         onChange={(e) =>
-                            setFormData({ ...formData, symptom: e.value })
+                            setFormData({ ...formData, symptoms: e.value })
                         }
                         optionLabel="value"
-                        placeholder="Select Symptom"
+                        placeholder="Select Symptoms"
                         filter
                         showClear
                         filterPlaceholder="Search symptoms"
+                        display="chip" // Displays selected items as chips
                         required
                     />
                 </div>
@@ -273,8 +309,9 @@ export default function Home() {
                                 division: "",
                                 vaccineDoses: null,
                                 problems: "",
-                                symptom: "",
+                                symptoms: [],
                                 vaccinesTaken: [],
+                                gender: "Male",
                             })
                         }
                     >
