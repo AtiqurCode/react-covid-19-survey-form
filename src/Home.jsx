@@ -122,7 +122,7 @@ export default function Home() {
         // Log form data to the console
         console.log("Form Data:", formData);
 
-        if (formData.name && formData.email && formData.date_of_birth && formData.division && formData.vaccine_doses) {
+        if (formData.name && formData.email && formData.date_of_birth && formData.division) {
             // Form data is valid
 
             // API URL
