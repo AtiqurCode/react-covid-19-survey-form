@@ -10,6 +10,8 @@ import { Link } from 'react-router-dom';
 import { Checkbox } from 'primereact/checkbox';
 import { MultiSelect } from 'primereact/multiselect';
 import axios from 'axios';
+import { Toast } from "primereact/toast";
+import { classNames } from "primereact/utils";
 
 export default function Home() {
 
@@ -115,39 +117,68 @@ export default function Home() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setSubmitted(true);
+
         // Log form data to the console
         console.log("Form Data:", formData);
 
-        // API URL
-        const apiUrl = 'https://covid19.test/api/covid-survey'; // Replace with your API URL
+        if (formData.name && formData.email && formData.date_of_birth && formData.division && formData.vaccine_doses) {
+            // Form data is valid
 
-        try {
-            const response = await axios.post(apiUrl, formData, {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
+            // API URL
+            const apiUrl = 'https://covid19.test/api/covid-survey'; // Replace with your API URL
 
-            // Handle the API response
-            alert('Thank you for completing the survey!');
-            console.log('Response Data:', response.data);
+            try {
+                const response = await axios.post(apiUrl, formData, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
 
-            // Reset form data
-            setFormData({
-                name: "",
-                email: "",
-                date_of_birth: "",
-                division: "",
-                vaccine_doses: 0,
-                problems: "",
-                symptoms: [],
-                vaccinesTaken: [],
-                gender: "Male",
-            });
-        } catch (error) {
-            console.error('Error:', error);
-            alert('There was an error with your submission.');
+                if (response.status === 201) {
+                    console.log('Form submitted successfully:', response.data);
+                    toast.current.show({
+                        severity: "success",
+                        summary: "Survey Form Submitted",
+                        detail: response?.data?.message,
+                        life: 6000,
+                    });
+
+                    // Reset form data
+                    setFormData({
+                        name: "",
+                        email: "",
+                        date_of_birth: "",
+                        division: "",
+                        vaccine_doses: 0,
+                        problems: "",
+                        symptoms: [],
+                        vaccinesTaken: [],
+                        gender: "Male",
+                    });
+                } else if (response.status === 400) {
+                    toast.current.show({
+                        severity: "error",
+                        summary: "Error",
+                        detail: response?.data?.error_message,
+                        life: 6000,
+                    });
+                }
+
+            } catch (error) {
+                console.error('Error submitting form:', error);
+                toast.current.show({
+                    severity: 'error',
+                    summary: 'Form Submission Error',
+                    detail: error?.response?.data.error_message,
+                    life: 6000,
+                });
+
+                console.error('Error submitting form:', error);
+            }
         }
+
+
 
 
     };
@@ -155,6 +186,18 @@ export default function Home() {
     const handleGenderChange = (e) => {
         setFormData({ ...formData, gender: e.value });
     };
+
+    const [submitted, setSubmitted] = useState(false);
+    const toast = React.useRef(null);
+    const isFieldInvalid = (field) => {
+        const value = formData[field];
+        if (field === "date_of_birth") {
+            return submitted && (!value || isNaN(new Date(value).getTime()));
+        }
+        return submitted && !value;
+    };
+
+
 
     return (
 
@@ -179,46 +222,58 @@ export default function Home() {
                 </div>
             </div>
 
+            <Toast ref={toast} />
+
+
             { /* Form start here*/}
             <form>
 
                 {/* Name */}
                 <div className="flex flex-column gap-2 mb-4">
-                    <label htmlFor="username">Your Name</label>
+                    <label htmlFor="username" className={classNames({ "p-error": isFieldInvalid("name") })}>Your Name</label>
                     <InputText
                         id="name"
                         aria-describedby="username-help"
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        required="true"
+                        className={classNames({ "p-invalid": isFieldInvalid("name") })}
+                        placeholder="Enter your name. Ex: John Doe"
 
                     />
-                    <small id="username-help">
-                        Enter your Name. Ex: John Doe
-                    </small>
                 </div>
 
                 {/* Email */}
                 <div className="flex flex-column gap-2 mb-4">
-                    <label htmlFor="emailLabel">Your Email or Number</label>
-                    <InputText id="email" value={formData.email} onChange={(e) =>
-                        setFormData({ ...formData, email: e.target.value })
-                    } required />
+                    <label htmlFor="emailLabel" className={classNames({ "p-error": isFieldInvalid("email") })}>Your Email or Number</label>
+                    <InputText
+                        id="email"
+                        type="email"
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        className={classNames({ "p-invalid": isFieldInvalid("email") })}
+                        placeholder="Enter your email. Ex: lorem@example.com"
+                    />
                 </div>
 
                 {/* Date of Birth */}
                 <div className="flex flex-column gap-2 mb-4">
-                    <label htmlFor="dob">Date of Birth</label>
+                    <label htmlFor="dob" className={classNames({ "p-error": isFieldInvalid("date_of_birth") })}>
+                        Date of Birth
+                    </label>
                     <Calendar
                         id="dob"
-                        value={formData.date_of_birth}
-                        onChange={(e) => setFormData({ ...formData, date_of_birth: e.target.value })} // Use the date formatting function
+                        value={formData.date_of_birth} // Make sure formData.date_of_birth stores a valid Date object or formatted string
+                        onChange={(e) => setFormData({ ...formData, date_of_birth: e.value })} // Use e.value for Calendar
                         placeholder="Select your birth date"
-                        dateFormat="yy/mm/dd" // Display format for the input
+                        dateFormat="yy/mm/dd" // Display format
                         showIcon
-                        required
+                        className={classNames({ "p-invalid": isFieldInvalid("date_of_birth") })}
                     />
+                    {isFieldInvalid("date_of_birth") && (
+                        <small className="p-error">Date of Birth is required.</small>
+                    )}
                 </div>
+
 
                 {/* Gender Checkbox */}
                 <div className="flex flex-column gap-2 mb-4">
@@ -243,14 +298,14 @@ export default function Home() {
 
                 {/* Division Dropdown */}
                 <div className="flex flex-column gap-2 mb-4">
-                    <label htmlFor="division">Your Division</label>
+                    <label htmlFor="division" className={classNames({ "p-error": isFieldInvalid("division") })}>Your Division</label>
                     <Dropdown
                         id="division"
                         value={formData.division}
                         options={divisionOptions}
                         onChange={(e) => setFormData({ ...formData, division: e.value })}
                         placeholder="Select Your Division"
-                        required
+                        className={classNames({ "p-invalid": isFieldInvalid("division") })}
                     />
                 </div>
 
