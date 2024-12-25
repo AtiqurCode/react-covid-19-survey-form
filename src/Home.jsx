@@ -27,6 +27,9 @@ export default function Home() {
         vaccinesTaken: [],
     });
 
+    const local = "https://covid19.test";
+    const server = "https://survey19.mdatiqur.me";
+
     const genderOptions = [
         { value: 'Male', label: 'Male' },
         { value: 'Female', label: 'Female' },
@@ -126,7 +129,8 @@ export default function Home() {
             // Form data is valid
 
             // API URL
-            const apiUrl = 'https://covid19.test/api/covid-survey'; // Replace with your API URL
+            // const apiUrl = local + '/api/covid-survey'; // Replace with your API URL
+            const apiUrl = server + '/api/covid-survey'; // Replace with your API URL
 
             try {
                 const response = await axios.post(apiUrl, formData, {
