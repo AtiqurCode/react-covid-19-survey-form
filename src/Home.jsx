@@ -27,7 +27,7 @@ export default function Home() {
         vaccinesTaken: [],
     });
 
-    const local = "https://covid19.test";
+    // const local = "https://covid19.test";
     const server = "https://survey19.mdatiqur.me";
 
     const genderOptions = [
@@ -181,9 +181,6 @@ export default function Home() {
                 console.error('Error submitting form:', error);
             }
         }
-
-
-
 
     };
 
