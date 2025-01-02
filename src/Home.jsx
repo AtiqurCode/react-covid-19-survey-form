@@ -12,9 +12,13 @@ import { MultiSelect } from 'primereact/multiselect';
 import axios from 'axios';
 import { Toast } from "primereact/toast";
 import { classNames } from "primereact/utils";
+import { useNavigate } from 'react-router-dom';
 
 export default function Home() {
 
+    const navigate = useNavigate();
+
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -120,6 +124,8 @@ export default function Home() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        // Set submitting state to true
+
         setSubmitted(true);
 
         // Log form data to the console
@@ -127,6 +133,8 @@ export default function Home() {
 
         if (formData.name && formData.email && formData.date_of_birth && formData.division) {
             // Form data is valid
+
+            setIsSubmitting(true);
 
             // API URL
             // const apiUrl = local + '/api/covid-survey'; // Replace with your API URL
@@ -141,12 +149,12 @@ export default function Home() {
 
                 if (response.status === 201) {
                     console.log('Form submitted successfully:', response.data);
-                    toast.current.show({
-                        severity: "success",
-                        summary: "Survey Form Submitted",
-                        detail: response?.data?.message,
-                        life: 6000,
-                    });
+                    // toast.current.show({
+                    //     severity: "success",
+                    //     summar   y: "Survey Form Submitted",
+                    //     detail: response?.data?.message,
+                    //     life: 6000,
+                    // });
 
                     // Reset form data
                     setFormData({
@@ -160,6 +168,9 @@ export default function Home() {
                         vaccinesTaken: [],
                         gender: "Male",
                     });
+
+                    navigate('/success', { state: { message: response?.data?.message } });
+
                 } else if (response.status === 400) {
                     toast.current.show({
                         severity: "error",
@@ -179,6 +190,9 @@ export default function Home() {
                 });
 
                 console.error('Error submitting form:', error);
+            } finally {
+                // Set submitting state back to false after completion (optional)
+                setIsSubmitting(false);
             }
         }
 
@@ -410,9 +424,14 @@ export default function Home() {
                     >
                         Clear
                     </button>
-                    <button onClick={handleSubmit} className="p-button p-component">
-                        Submit
-                    </button>
+                    {!isSubmitting && (
+                        <button
+                            onClick={handleSubmit}
+                            className="p-button p-component"
+                        >
+                            Submit
+                        </button>
+                    )}
                 </div>
             </form>
             {/* privacy policy link add */}
