@@ -16,8 +16,8 @@ This is a simple survey form that collects user's information about their experi
 - Submit form data to an API
 
 ## Project preview
-![Covid-19 Survey Form](https://user-images.githubusercontent.com/25878302/134760013-3b3b3b3b-1b3b-4b3b-8b3b-3b3b3b3b3b3b.png)
-![Covid-19 Survey Form](https://user-images.githubusercontent.com/25878302/134760014-3b3b3b3b-1b3b-4b3b-8b3b-3b3b3b3b3b3b.png)
+![Covid-19 Survey Form](https://github.com/AtiqurCode/react-covid-19-survey-form/blob/master/public/covid-19-1.png)
+![Covid-19 Survey Form](https://github.com/AtiqurCode/react-covid-19-survey-form/blob/master/public/covid-19-2.png)
 
 
 ## Getting Started with Create React App
