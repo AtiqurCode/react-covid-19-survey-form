@@ -1,4 +1,26 @@
-# Getting Started with Create React App
+# Covid-19 Survey Form with React
+App Url: [Covid-19 Survey Form](https://covid-19-survey.netlify.app)
+
+## Description
+This is a simple survey form that collects user's information about their experience with Covid-19. The form is built with React and styled with primeReact components. The form has 3 sections: Personal Information, Covid-19 Symptoms, and Additional Information. The form has validation for required fields and displays an error message if the user tries to submit the form without filling out the required fields. The form also has a confirmation page that displays the user's information after the form is submitted.
+
+
+## Technologies
+- React
+- PrimeReact
+- Laravel API (for storing form data)
+
+## Features
+- Form validation
+- Confirmation page
+- Submit form data to an API
+
+## Project preview
+![Covid-19 Survey Form](https://user-images.githubusercontent.com/25878302/134760013-3b3b3b3b-1b3b-4b3b-8b3b-3b3b3b3b3b3b.png)
+![Covid-19 Survey Form](https://user-images.githubusercontent.com/25878302/134760014-3b3b3b3b-1b3b-4b3b-8b3b-3b3b3b3b3b3b.png)
+
+
+## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
