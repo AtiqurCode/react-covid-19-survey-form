@@ -23,12 +23,13 @@ const PrivacyPolicy = () => {
                     <li>Fatigue</li>
                     <li>Headache</li>
                     <li>Pain at the injection site</li>
+                    <li>etc.</li>
                 </ul>
                 <p>All data will be anonymized and will not include any personally identifiable information.</p>
 
                 <h2>2. Purpose of Data Collection</h2>
                 <p>
-                    The data collected will be used to analyze common symptoms experienced post-COVID-19 vaccination and help improve healthcare services and public awareness.
+                The data collected will be used solely for thesis research and analysis purposes. It will not be shared publicly and will be handled with strict confidentiality.
                 </p>
 
                 <h2>3. Data Protection</h2>
