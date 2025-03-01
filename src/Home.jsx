@@ -244,7 +244,7 @@ export default function Home() {
 
                 {/* Email */}
                 <div className="flex flex-column gap-2 mb-4">
-                    <label htmlFor="emailLabel" className={classNames({ "p-error": isFieldInvalid("email") })}>Your Email or Number</label>
+                    <label htmlFor="emailLabel" className={classNames({ "p-error": isFieldInvalid("email") })}>Your Email Address</label>
                     <InputText
                         id="email"
                         type="email"
