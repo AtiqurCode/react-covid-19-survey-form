@@ -31,8 +31,8 @@ export default function Home() {
         vaccinesTaken: [],
     });
 
-    const server = "https://covid19.test";
-    // const server = "https://survey19.mdatiqur.me";
+    // const server = "https://covid19.test";
+    const server = "https://survey19.mdatiqur.me";
 
     const genderOptions = [
         { value: 'Male', label: 'Male' },
