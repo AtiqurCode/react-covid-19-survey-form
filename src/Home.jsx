@@ -4,71 +4,70 @@ import { Dropdown } from "primereact/dropdown";
 import { InputTextarea } from "primereact/inputtextarea";
 import { Calendar } from "primereact/calendar";
 import { RadioButton } from "primereact/radiobutton";
-import { Button } from 'primereact/button';
-import { Link } from 'react-router-dom';
-import { Checkbox } from 'primereact/checkbox';
-import { MultiSelect } from 'primereact/multiselect';
-import axios from 'axios';
+import { Button } from "primereact/button";
+import { Link } from "react-router-dom";
+import { Checkbox } from "primereact/checkbox";
+import { MultiSelect } from "primereact/multiselect";
+import axios from "axios";
 import { Toast } from "primereact/toast";
 import { classNames } from "primereact/utils";
-import { useNavigate } from 'react-router-dom';
-import { ProgressSpinner } from 'primereact/progressspinner';
+import { useNavigate } from "react-router-dom";
+import { ProgressSpinner } from "primereact/progressspinner";
+import { FloatLabel } from "primereact/floatlabel";
 
 export default function Home() {
+  const navigate = useNavigate();
 
-    const navigate = useNavigate();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    date_of_birth: "",
+    division: "", // Add division field
+    gender: "Male", // Default value
+    vaccine_doses: 0,
+    problems: "",
+    symptoms: [],
+    vaccinesTaken: [],
+  });
 
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [formData, setFormData] = useState({
-        name: "",
-        email: "",
-        date_of_birth: "",
-        division: "", // Add division field
-        gender: 'Male', // Default value
-        vaccine_doses: 0,
-        problems: "",
-        symptoms: [],
-        vaccinesTaken: [],
-    });
+  // const server = "https://covid19.test";
+  const server = "https://survey19.mdatiqur.me";
 
-    // const server = "https://covid19.test";
-    const server = "https://survey19.mdatiqur.me";
+  const genderOptions = [
+    { value: "Male", label: "Male" },
+    { value: "Female", label: "Female" },
+    { value: "Others", label: "Others" },
+  ];
 
-    const genderOptions = [
-        { value: 'Male', label: 'Male' },
-        { value: 'Female', label: 'Female' },
-        { value: 'Others', label: 'Others' },
-    ];
+  const vaccineOptions = [
+    { label: "None", value: 0, key: 1 },
+    { label: "1 Dose", value: 1, key: 2 },
+    { label: "2 Doses", value: 2, key: 3 },
+    { label: "3 Doses", value: 3, key: 4 },
+    { label: "4 Doses", value: 4, key: 4 },
+  ];
 
-    const vaccineOptions = [
-        { label: "None", value: 0, key: 1 },
-        { label: "1 Dose", value: 1, key: 2 },
-        { label: "2 Doses", value: 2, key: 3 },
-        { label: "3 Doses", value: 3, key: 4 },
-        { label: "4 Doses", value: 4, key: 4 },
-    ];
+  const vaccineNames = [
+    { label: "AstraZeneca", value: "AstraZeneca" },
+    { label: "Pfizer", value: "Pfizer" },
+    { label: "Sinopharm", value: "Sinopharm" },
+    { label: "Moderna", value: "Moderna" },
+    { label: "Sinovac", value: "Sinovac" },
+    { label: "Janssen (Johnson & Johnson)", value: "Janssen" },
+    { label: "Pfizer-PF (Comirnaty)", value: "Pfizer-PF" },
+  ];
 
-
-    const vaccineNames = [
-        { label: "AstraZeneca", value: "AstraZeneca" },
-        { label: "Pfizer", value: "Pfizer" },
-        { label: "Sinopharm", value: "Sinopharm" },
-        { label: "Moderna", value: "Moderna" },
-        { label: "Sinovac", value: "Sinovac" },
-        { label: "Janssen (Johnson & Johnson)", value: "Janssen" },
-        { label: "Pfizer-PF (Comirnaty)", value: "Pfizer-PF" },
-    ];
-
-    const divisionOptions = [
-        { label: "Barisal", value: "Barisal" },
-        { label: "Chittagong", value: "Chittagong" },
-        { label: "Dhaka", value: "Dhaka" },
-        { label: "Khulna", value: "Khulna" },
-        { label: "Mymensingh", value: "Mymensingh" },
-        { label: "Rajshahi", value: "Rajshahi" },
-        { label: "Rangpur", value: "Rangpur" },
-        { label: "Sylhet", value: "Sylhet" },
-    ];
+  const divisionOptions = [
+    { label: "Barisal", value: "Barisal" },
+    { label: "Chittagong", value: "Chittagong" },
+    { label: "Dhaka", value: "Dhaka" },
+    { label: "Khulna", value: "Khulna" },
+    { label: "Mymensingh", value: "Mymensingh" },
+    { label: "Rajshahi", value: "Rajshahi" },
+    { label: "Rangpur", value: "Rangpur" },
+    { label: "Sylhet", value: "Sylhet" },
+  ];
 
     const symptomOptions = [
         { id: 1, value: "High temperature", label: "High temperature" },
@@ -107,328 +106,359 @@ export default function Home() {
         { id: 34, value: "Others", label: "Others" },
     ];
 
-    const handleDoseChange = (e) => {
-        const doses = e.value;
-        setFormData({
+  const handleDoseChange = (e) => {
+    const doses = e.value;
+    setFormData({
+      ...formData,
+      vaccine_doses: doses,
+      vaccinesTaken: Array(doses).fill(""), // Initialize empty selections
+    });
+  };
+
+  const handleVaccineChange = (index, value) => {
+    const updatedVaccines = [...formData.vaccinesTaken];
+    updatedVaccines[index] = value;
+    setFormData({ ...formData, vaccinesTaken: updatedVaccines });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitted(true);
+    console.log("Form Data:", formData);
+
+    if (
+      formData.name &&
+      formData.email &&
+      formData.date_of_birth &&
+      formData.division
+    ) {
+      setIsSubmitting(true);
+      const apiUrl = server + "/api/covid-survey";
+
+      try {
+        const response = await axios.post(
+          apiUrl,
+          {
             ...formData,
-            vaccine_doses: doses,
-            vaccinesTaken: Array(doses).fill(""), // Initialize empty selections
+            date_of_birth: formData.date_of_birth, // Ensure date_of_birth is already in yyyy-mm-dd format
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (response.status === 201) {
+          console.log("Form submitted successfully:", response.data);
+          setFormData({
+            name: "",
+            email: "",
+            date_of_birth: "",
+            division: "",
+            vaccine_doses: 0,
+            problems: "",
+            symptoms: [],
+            vaccinesTaken: [],
+            gender: "Male",
+          });
+          navigate("/success", { state: { message: response?.data?.message } });
+        } else if (response.status === 400) {
+          toast.current.show({
+            severity: "error",
+            summary: "Error",
+            detail: response?.data?.error_message,
+            life: 6000,
+          });
+        }
+      } catch (error) {
+        console.error("Error submitting form:", error);
+        toast.current.show({
+          severity: "error",
+          summary: "Form Submission Error",
+          detail: error?.response?.data.error_message,
+          life: 6000,
         });
-    };
+      } finally {
+        setIsSubmitting(false);
+      }
+    }
+  };
 
-    const handleVaccineChange = (index, value) => {
-        const updatedVaccines = [...formData.vaccinesTaken];
-        updatedVaccines[index] = value;
-        setFormData({ ...formData, vaccinesTaken: updatedVaccines });
-    };
+  const handleGenderChange = (e) => {
+    setFormData({ ...formData, gender: e.value });
+  };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setSubmitted(true);
-        console.log("Form Data:", formData);
+  const handleDateChange = (e) => {
+    const date = e.value;
+    const formattedDate = date ? date.toISOString().split("T")[0] : "";
+    setFormData({ ...formData, date_of_birth: formattedDate });
+  };
 
-        if (formData.name && formData.email && formData.date_of_birth && formData.division) {
-            setIsSubmitting(true);
-            const apiUrl = server + '/api/covid-survey';
+  const [submitted, setSubmitted] = useState(false);
+  const toast = React.useRef(null);
+  const isFieldInvalid = (field) => {
+    const value = formData[field];
+    if (field === "date_of_birth") {
+      return submitted && (!value || isNaN(new Date(value).getTime()));
+    }
+    return submitted && !value;
+  };
 
-            try {
-                const response = await axios.post(apiUrl, {
-                    ...formData,
-                    date_of_birth: formData.date_of_birth // Ensure date_of_birth is already in yyyy-mm-dd format
-                }, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                });
-
-                if (response.status === 201) {
-                    console.log('Form submitted successfully:', response.data);
-                    setFormData({
-                        name: "",
-                        email: "",
-                        date_of_birth: "",
-                        division: "",
-                        vaccine_doses: 0,
-                        problems: "",
-                        symptoms: [],
-                        vaccinesTaken: [],
-                        gender: "Male",
-                    });
-                    navigate('/success', { state: { message: response?.data?.message } });
-                } else if (response.status === 400) {
-                    toast.current.show({
-                        severity: "error",
-                        summary: "Error",
-                        detail: response?.data?.error_message,
-                        life: 6000,
-                    });
-                }
-            } catch (error) {
-                console.error('Error submitting form:', error);
-                toast.current.show({
-                    severity: 'error',
-                    summary: 'Form Submission Error',
-                    detail: error?.response?.data.error_message,
-                    life: 6000,
-                });
-            } finally {
-                setIsSubmitting(false);
-            }
-        }
-    };
-
-    const handleGenderChange = (e) => {
-        setFormData({ ...formData, gender: e.value });
-    };
-
-    const handleDateChange = (e) => {
-        const date = e.value;
-        const formattedDate = date ? date.toISOString().split('T')[0] : "";
-        setFormData({ ...formData, date_of_birth: formattedDate });
-    };
-
-    const [submitted, setSubmitted] = useState(false);
-    const toast = React.useRef(null);
-    const isFieldInvalid = (field) => {
-        const value = formData[field];
-        if (field === "date_of_birth") {
-            return submitted && (!value || isNaN(new Date(value).getTime()));
-        }
-        return submitted && !value;
-    };
-
-
-
-    return (
-
-        <div
-            className="surface-0 p-4 shadow-2 border-round mx-auto"
-            style={{ maxWidth: "900px", width: "100%" }}
-        >
-            {/* <div className="text-3xl font-medium text-900 mb-3">COVID-19 Vaccination Survey</div>
+  return (
+    <div
+      className="surface-0 p-4 shadow-2 border-round mx-auto"
+      style={{ maxWidth: "900px", width: "100%" }}
+    >
+      {/* <div className="text-3xl font-medium text-900 mb-3">COVID-19 Vaccination Survey</div>
           <div className="font-medium text-500 mb-3">we are interested in your feedback.</div> */}
 
-            {/* Centered Logo and Text */}
-            <div className="flex flex-column align-items-center text-center mb-4">
-                {/* Add your logo */}
-                <img src="4667161.png" alt="Logo" className="mb-3" style={{ width: '100px', height: 'auto' }} />
+      {/* Centered Logo and Text */}
+      <div className="flex flex-column align-items-center text-center mb-4">
+        {/* Add your logo */}
+        <img
+          src="4667161.png"
+          alt="Logo"
+          className="mb-3"
+          style={{ width: "100px", height: "auto" }}
+        />
 
-                {/* Title */}
-                <div className="text-3xl font-medium text-900 mb-2">COVID-19 Vaccination Survey</div>
-
-                {/* Description */}
-                <div className="font-medium text-500">
-                    We are very thankedfull for your contribution.
-                </div>
-            </div>
-
-            <Toast ref={toast} />
-
-
-            { /* Form start here*/}
-            <form>
-
-                {/* Name */}
-                <div className="flex flex-column gap-2 mb-4">
-                    <label htmlFor="username" className={classNames({ "p-error": isFieldInvalid("name") })}>Your Name</label>
-                    <InputText
-                        id="name"
-                        aria-describedby="username-help"
-                        value={formData.name}
-                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        className={classNames({ "p-invalid": isFieldInvalid("name") })}
-                        placeholder="Enter your name. Ex: John Doe"
-
-                    />
-                </div>
-
-                {/* Email */}
-                <div className="flex flex-column gap-2 mb-4">
-                    <label htmlFor="emailLabel" className={classNames({ "p-error": isFieldInvalid("email") })}>Your Email Address</label>
-                    <InputText
-                        id="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        className={classNames({ "p-invalid": isFieldInvalid("email") })}
-                        placeholder="Enter your email. Ex: lorem@example.com"
-                    />
-                </div>
-
-                {/* Date of Birth */}
-                <div className="flex flex-column gap-2 mb-4">
-                    <label htmlFor="dob" className={classNames({ "p-error": isFieldInvalid("date_of_birth") })}>
-                        Date of Birth
-                    </label>
-                    <Calendar
-                        id="dob"
-                        value={formData.date_of_birth ? new Date(formData.date_of_birth) : null} // Ensure it's a Date object
-                        onChange={handleDateChange} // Use handleDateChange
-                        placeholder="Select your birth date"
-                        dateFormat="yy/mm/dd"
-                        showIcon
-                        className={classNames({ "p-invalid": isFieldInvalid("date_of_birth") })}
-                    />
-                    {isFieldInvalid("date_of_birth") && (
-                        <small className="p-error">Date of Birth is required.</small>
-                    )}
-                </div>
-
-
-                {/* Gender Checkbox */}
-                <div className="flex flex-column gap-2 mb-4">
-                    <label htmlFor="gender">Gender</label>
-                    <div id="gender">
-                        {genderOptions.map((genderOption) => (
-                            <div key={genderOption.value} className="flex mb-3">
-                                <Checkbox
-                                    inputId={`gender-${genderOption.value}`}
-                                    name="gender"
-                                    value={genderOption.value}
-                                    onChange={(e) => handleGenderChange(e)}
-                                    checked={formData.gender === genderOption.value}
-                                />
-                                <label htmlFor={`gender-${genderOption.value}`} className="ml-2">
-                                    {genderOption.label}
-                                </label>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Division Dropdown */}
-                <div className="flex flex-column gap-2 mb-4">
-                    <label htmlFor="division" className={classNames({ "p-error": isFieldInvalid("division") })}>Your Division</label>
-                    <Dropdown
-                        id="division"
-                        value={formData.division}
-                        options={divisionOptions}
-                        onChange={(e) => setFormData({ ...formData, division: e.value })}
-                        placeholder="Select Your Division"
-                        className={classNames({ "p-invalid": isFieldInvalid("division") })}
-                    />
-                </div>
-
-                {/* Vaccine Doses Dropdown */}
-                <div className="flex flex-column gap-2 mb-4">
-                    <label htmlFor="vaccineDoses">
-                        How many vaccine doses have you taken?
-                    </label>
-                    <div id="vaccineDoses">
-                        {vaccineOptions.map((option) => (
-                            <div key={option.value} className="flex mb-3 ">
-                                <RadioButton
-                                    inputId={`vaccineDose-${option.value}`}
-                                    name="vaccineDoses"
-                                    value={option.value}
-                                    onChange={(e) => handleDoseChange(e)}
-                                    checked={formData.vaccine_doses === option.value}
-                                />
-                                <label htmlFor={`vaccineDose-${option.value}`} className="ml-2">
-                                    {option.label}
-                                </label>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Dynamic Vaccine Name Dropdowns */}
-                {formData.vaccinesTaken.map((vaccine, index) => (
-                    <div key={index} className="flex flex-column gap-2 mb-4">
-                        <label htmlFor={`vaccine-${index}`}>Select Vaccine name for Dose {index + 1}</label>
-                        <Dropdown
-                            id={`vaccine-${index}`}
-                            value={formData.vaccinesTaken[index]}
-                            options={vaccineNames}
-                            onChange={(e) => handleVaccineChange(index, e.value)}
-                            placeholder="Select Vaccine"
-                            required
-                        />
-                    </div>
-                ))}
-
-
-                {/* Symptoms Dropdown */}
-                <div className="flex flex-column gap-2 mb-4">
-                    <label htmlFor="symptomHelp">
-                        What are your symptoms after the vaccine?
-                    </label>
-                    <MultiSelect
-                        id="symptomHelp"
-                        value={formData.symptoms} // Updated for multiple selection
-                        options={symptomOptions}
-                        onChange={(e) =>
-                            setFormData({ ...formData, symptoms: e.value })
-                        }
-                        optionLabel="value"
-                        placeholder="Select Symptoms"
-                        filter
-                        showClear
-                        filterPlaceholder="Search symptoms"
-                        display="chip" // Displays selected items as chips
-                        required
-                    />
-                </div>
-
-
-                {/* Problems Textarea */}
-                <div className="flex flex-column gap-2 mb-4">
-                    <label htmlFor="problems">
-                        What problems are you facing after the vaccine?
-                    </label>
-                    <InputTextarea
-                        id="problems"
-                        rows={5}
-                        value={formData.problems}
-                        onChange={(e) =>
-                            setFormData({ ...formData, problems: e.target.value })
-                        }
-                        placeholder="Describe any issues or problems"
-                    />
-                </div>
-
-
-                {/* Submit and Clear Buttons */}
-                <div className="flex flex-wrap justify-content-end gap-3 mb-6">
-                    <button
-                        type="button"
-                        className="p-button p-component p-button-danger"
-                        onClick={() =>
-                            setFormData({
-                                name: "",
-                                email: "",
-                                date_of_birth: "",
-                                division: "",
-                                vaccine_doses: 0,
-                                problems: "",
-                                symptoms: [],
-                                vaccinesTaken: [],
-                                gender: "Male",
-                            })
-                        }
-                        disabled={isSubmitting}
-                    >
-                        Clear
-                    </button>
-                    {!isSubmitting ? (
-                        <button
-                            onClick={handleSubmit}
-                            className="p-button p-component"
-                        >
-                            Submit
-                        </button>
-                    ) : (
-                        <ProgressSpinner />
-                    )}
-                </div>
-            </form>
-            {/* privacy policy link add */}
-            <div className="flex-privacy flex-wrap justify-content-center">
-                <span className="privacy-policy-text">Check our</span>
-                <Link to="/privacy">
-                    <Button label="Privacy Policy" link />
-                </Link>
-            </div>
+        {/* Title */}
+        <div className="text-3xl font-medium text-900 mb-2">
+          COVID-19 Vaccination Survey
         </div>
-    )
+
+        {/* Description */}
+        <div className="font-medium text-500">
+          We are very thankedfull for your contribution.
+        </div>
+      </div>
+
+      <Toast ref={toast} />
+
+      {/* Form start here*/}
+      <form>
+        {/* Name */}
+        <div className="flex flex-column gap-2 mb-4">
+          <label
+            htmlFor="username"
+            className={classNames({ "p-error": isFieldInvalid("name") })}
+          >
+            Your Name
+          </label>
+          <InputText
+            id="name"
+            aria-describedby="username-help"
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            className={classNames({ "p-invalid": isFieldInvalid("name") })}
+            placeholder="Enter your name. Ex: John Doe"
+          />
+        </div>
+
+        {/* Email */}
+        <div className="flex flex-column gap-2 mb-4">
+          <label
+            htmlFor="emailLabel"
+            className={classNames({ "p-error": isFieldInvalid("email") })}
+          >
+            Your Email Address
+          </label>
+          <InputText
+            id="email"
+            type="email"
+            value={formData.email}
+            onChange={(e) =>
+              setFormData({ ...formData, email: e.target.value })
+            }
+            className={classNames({ "p-invalid": isFieldInvalid("email") })}
+            placeholder="Enter your email. Ex: lorem@example.com"
+          />
+        </div>
+
+        {/* Date of Birth */}
+        <div className="flex flex-column gap-2 mb-4">
+          <label
+            htmlFor="dob"
+            className={classNames({
+              "p-error": isFieldInvalid("date_of_birth"),
+            })}
+          >
+            Date of Birth
+          </label>
+          <Calendar
+            id="dob"
+            value={
+              formData.date_of_birth ? new Date(formData.date_of_birth) : null
+            } // Ensure it's a Date object
+            onChange={handleDateChange} // Use handleDateChange
+            placeholder="Select your birth date"
+            dateFormat="yy/mm/dd"
+            showIcon
+            className={classNames({
+              "p-invalid": isFieldInvalid("date_of_birth"),
+            })}
+          />
+          {isFieldInvalid("date_of_birth") && (
+            <small className="p-error">Date of Birth is required.</small>
+          )}
+        </div>
+
+        {/* Gender Checkbox */}
+        <div className="flex flex-column gap-2 mb-4">
+          <label htmlFor="gender">Gender</label>
+          <div id="gender">
+            {genderOptions.map((genderOption) => (
+              <div key={genderOption.value} className="flex mb-3">
+                <Checkbox
+                  inputId={`gender-${genderOption.value}`}
+                  name="gender"
+                  value={genderOption.value}
+                  onChange={(e) => handleGenderChange(e)}
+                  checked={formData.gender === genderOption.value}
+                />
+                <label
+                  htmlFor={`gender-${genderOption.value}`}
+                  className="ml-2"
+                >
+                  {genderOption.label}
+                </label>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Division Dropdown */}
+        <div className="flex flex-column gap-2 mb-4">
+          <label
+            htmlFor="division"
+            className={classNames({ "p-error": isFieldInvalid("division") })}
+          >
+            Your Division
+          </label>
+          <Dropdown
+            id="division"
+            value={formData.division}
+            options={divisionOptions}
+            onChange={(e) => setFormData({ ...formData, division: e.value })}
+            placeholder="Select Your Division"
+            className={classNames({ "p-invalid": isFieldInvalid("division") })}
+          />
+        </div>
+
+        {/* Vaccine Doses Dropdown */}
+        <div className="flex flex-column gap-2 mb-4">
+          <label htmlFor="vaccineDoses">
+            How many vaccine doses have you taken?
+          </label>
+          <div id="vaccineDoses">
+            {vaccineOptions.map((option) => (
+              <div key={option.value} className="flex mb-3 ">
+                <RadioButton
+                  inputId={`vaccineDose-${option.value}`}
+                  name="vaccineDoses"
+                  value={option.value}
+                  onChange={(e) => handleDoseChange(e)}
+                  checked={formData.vaccine_doses === option.value}
+                />
+                <label htmlFor={`vaccineDose-${option.value}`} className="ml-2">
+                  {option.label}
+                </label>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Dynamic Vaccine Name Dropdowns */}
+        {formData.vaccinesTaken.map((vaccine, index) => (
+          <div key={index} className="flex flex-column gap-2 mb-4">
+            <label htmlFor={`vaccine-${index}`}>
+              Select Vaccine name for Dose {index + 1}
+            </label>
+            <Dropdown
+              id={`vaccine-${index}`}
+              value={formData.vaccinesTaken[index]}
+              options={vaccineNames}
+              onChange={(e) => handleVaccineChange(index, e.value)}
+              placeholder="Select Vaccine"
+              required
+            />
+          </div>
+        ))}
+
+        {/* Symptoms Dropdown */}
+        <div className="flex flex-column justify-content-center gap-2 mb-4">
+          <label htmlFor="symptomHelp">
+            What are your symptoms after the vaccine?
+          </label>
+          <MultiSelect
+            id="symptomHelp"
+            value={formData.symptoms} // Updated for multiple selection
+            options={symptomOptions}
+            onChange={(e) => setFormData({ ...formData, symptoms: e.value })}
+            optionLabel="label" // Updated to display label with Bengali meanings
+            placeholder="Select Symptoms"
+            showClear
+            display="chip" // Displays selected items as chips
+            required
+            className="w-full md:w-20rem"
+          />
+        </div>
+
+        {/* Problems Textarea */}
+        <div className="flex flex-column gap-2 mb-4">
+          <label htmlFor="problems">
+            What problems are you facing after the vaccine?
+          </label>
+          <InputTextarea
+            id="problems"
+            rows={5}
+            value={formData.problems}
+            onChange={(e) =>
+              setFormData({ ...formData, problems: e.target.value })
+            }
+            placeholder="Describe any issues or problems"
+          />
+        </div>
+
+        {/* Submit and Clear Buttons */}
+        <div className="flex flex-wrap justify-content-end gap-3 mb-6">
+          <button
+            type="button"
+            className="p-button p-component p-button-danger"
+            onClick={() =>
+              setFormData({
+                name: "",
+                email: "",
+                date_of_birth: "",
+                division: "",
+                vaccine_doses: 0,
+                problems: "",
+                symptoms: [],
+                vaccinesTaken: [],
+                gender: "Male",
+              })
+            }
+            disabled={isSubmitting}
+          >
+            Clear
+          </button>
+          {!isSubmitting ? (
+            <button onClick={handleSubmit} className="p-button p-component">
+              Submit
+            </button>
+          ) : (
+            <ProgressSpinner />
+          )}
+        </div>
+      </form>
+      {/* privacy policy link add */}
+      <div className="flex-privacy flex-wrap justify-content-center">
+        <span className="privacy-policy-text">Check our</span>
+        <Link to="/privacy">
+          <Button label="Privacy Policy" link />
+        </Link>
+      </div>
+    </div>
+  );
 }
