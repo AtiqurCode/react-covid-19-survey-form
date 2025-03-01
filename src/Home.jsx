@@ -31,7 +31,7 @@ export default function Home() {
     vaccinesTaken: [],
   });
 
-  // const server = "https://covid19.test";
+//   const server = "https://covid19.test";
   const server = "https://survey19.mdatiqur.me";
 
   const genderOptions = [
@@ -401,7 +401,7 @@ export default function Home() {
             showClear
             display="chip" // Displays selected items as chips
             required
-            className="w-full md:w-20rem"
+            className="w-full"
           />
         </div>
 
