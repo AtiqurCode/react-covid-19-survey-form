@@ -31,8 +31,8 @@ export default function Home() {
         vaccinesTaken: [],
     });
 
-    // const local = "https://covid19.test";
-    const server = "https://survey19.mdatiqur.me";
+    const server = "https://covid19.test";
+    // const server = "https://survey19.mdatiqur.me";
 
     const genderOptions = [
         { value: 'Male', label: 'Male' },
@@ -132,7 +132,10 @@ export default function Home() {
             const apiUrl = server + '/api/covid-survey';
 
             try {
-                const response = await axios.post(apiUrl, formData, {
+                const response = await axios.post(apiUrl, {
+                    ...formData,
+                    date_of_birth: formData.date_of_birth // Ensure date_of_birth is already in yyyy-mm-dd format
+                }, {
                     headers: {
                         'Content-Type': 'application/json',
                     },
@@ -176,6 +179,12 @@ export default function Home() {
 
     const handleGenderChange = (e) => {
         setFormData({ ...formData, gender: e.value });
+    };
+
+    const handleDateChange = (e) => {
+        const date = e.value;
+        const formattedDate = date ? date.toISOString().split('T')[0] : "";
+        setFormData({ ...formData, date_of_birth: formattedDate });
     };
 
     const [submitted, setSubmitted] = useState(false);
@@ -253,10 +262,10 @@ export default function Home() {
                     </label>
                     <Calendar
                         id="dob"
-                        value={formData.date_of_birth} // Make sure formData.date_of_birth stores a valid Date object or formatted string
-                        onChange={(e) => setFormData({ ...formData, date_of_birth: e.value })} // Use e.value for Calendar
+                        value={formData.date_of_birth ? new Date(formData.date_of_birth) : null} // Ensure it's a Date object
+                        onChange={handleDateChange} // Use handleDateChange
                         placeholder="Select your birth date"
-                        dateFormat="yy/mm/dd" // Display format
+                        dateFormat="yy/mm/dd"
                         showIcon
                         className={classNames({ "p-invalid": isFieldInvalid("date_of_birth") })}
                     />
