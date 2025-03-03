@@ -102,7 +102,8 @@ export default function Home() {
         { id: 31, value: "Body aches", label: "Body aches" },
         { id: 32, value: "High fever", label: "High fever" },
         { id: 33, value: "Dizziness", label: "Dizziness" },
-        { id: 34, value: "Others", label: "Others" },
+        { id: 34, value: "Skin Allergy", label: "Skin Allergy" },
+        { id: 35, value: "Others", label: "Others" },
     ];
 
   const handleDoseChange = (e) => {
