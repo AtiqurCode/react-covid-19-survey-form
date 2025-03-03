@@ -13,7 +13,6 @@ import { Toast } from "primereact/toast";
 import { classNames } from "primereact/utils";
 import { useNavigate } from "react-router-dom";
 import { ProgressSpinner } from "primereact/progressspinner";
-import { FloatLabel } from "primereact/floatlabel";
 
 export default function Home() {
   const navigate = useNavigate();
