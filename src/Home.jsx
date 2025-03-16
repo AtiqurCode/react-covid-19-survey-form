@@ -434,26 +434,28 @@ export default function Home() {
 
         {/* Submit and Clear Buttons */}
         <div className="flex flex-wrap justify-content-end gap-3 mb-6">
-          <button
-            type="button"
-            className="p-button p-component p-button-danger"
-            onClick={() =>
-              setFormData({
-                name: "",
-                email: "",
-                date_of_birth: "",
-                division: "",
-                vaccine_doses: 0,
-                problems: "",
-                symptoms: [],
-                vaccinesTaken: [],
-                gender: "Male",
-              })
-            }
-            disabled={isSubmitting}
-          >
-            Clear
-          </button>
+          {!isSubmitting && (
+            <button
+              type="button"
+              className="p-button p-component p-button-danger"
+              onClick={() =>
+                setFormData({
+                  name: "",
+                  email: "",
+                  date_of_birth: "",
+                  division: "",
+                  vaccine_doses: 0,
+                  problems: "",
+                  symptoms: [],
+                  vaccinesTaken: [],
+                  gender: "Male",
+                })
+              }
+              disabled={isSubmitting}
+            >
+              Clear
+            </button>
+          )}
           {!isSubmitting ? (
             <button onClick={handleSubmit} className="p-button p-component">
               Submit
