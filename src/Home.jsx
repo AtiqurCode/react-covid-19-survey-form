@@ -30,7 +30,7 @@ export default function Home() {
     vaccinesTaken: [],
   });
 
-//   const server = "https://covid19.test";
+  // const server = "https://covid19.test";
   const server = "https://survey19.mdatiqur.me";
 
   const genderOptions = [
@@ -68,43 +68,50 @@ export default function Home() {
     { label: "Sylhet", value: "Sylhet" },
   ];
 
-    const symptomOptions = [
-        { id: 1, value: "High temperature", label: "High temperature" },
-        { id: 2, value: "Chills", label: "Chills" },
-        { id: 3, value: "Sweating", label: "Sweating" },
-        { id: 4, value: "Headache", label: "Headache" },
-        { id: 5, value: "Weakness", label: "Weakness" },
-        { id: 6, value: "Runny or blocked nose", label: "Runny or blocked nose" },
-        { id: 7, value: "Sneezing", label: "Sneezing" },
-        { id: 8, value: "Sore throat", label: "Sore throat" },
-        { id: 9, value: "Mild fever", label: "Mild fever" },
-        { id: 10, value: "Persistent coughing", label: "Persistent coughing" },
-        { id: 11, value: "Throat irritation", label: "Throat irritation" },
-        { id: 12, value: "Phlegm production", label: "Phlegm production" },
-        { id: 13, value: "Dry cough", label: "Dry cough" },
-        { id: 14, value: "Wet cough (with mucus)", label: "Wet cough (with mucus)" },
-        { id: 15, value: "Generalized muscle aches", label: "Generalized muscle aches" },
-        { id: 16, value: "Joint pain", label: "Joint pain" },
-        { id: 17, value: "Fatigue", label: "Fatigue" },
-        { id: 18, value: "Rash", label: "Rash" },
-        { id: 19, value: "Itching", label: "Itching" },
-        { id: 20, value: "Redness", label: "Redness" },
-        { id: 21, value: "Blisters", label: "Blisters" },
-        { id: 22, value: "Flaky skin", label: "Flaky skin" },
-        { id: 23, value: "Itchy skin", label: "Itchy skin" },
-        { id: 24, value: "Watery eyes", label: "Watery eyes" },
-        { id: 25, value: "Skin rashes", label: "Skin rashes" },
-        { id: 26, value: "Difficulty breathing", label: "Difficulty breathing" },
-        { id: 27, value: "Stomach pain", label: "Stomach pain" },
-        { id: 28, value: "Bloating", label: "Bloating" },
-        { id: 29, value: "Diarrhea", label: "Diarrhea" },
-        { id: 30, value: "Constipation", label: "Constipation" },
-        { id: 31, value: "Body aches", label: "Body aches" },
-        { id: 32, value: "High fever", label: "High fever" },
-        { id: 33, value: "Dizziness", label: "Dizziness" },
-        { id: 34, value: "Skin Allergy", label: "Skin Allergy" },
-        { id: 35, value: "Others", label: "Others" },
-    ];
+  const symptomOptions = [
+    { id: 1, value: "High temperature", label: "High temperature" },
+    { id: 2, value: "Chills", label: "Chills" },
+    { id: 3, value: "Sweating", label: "Sweating" },
+    { id: 4, value: "Headache", label: "Headache" },
+    { id: 5, value: "Weakness", label: "Weakness" },
+    { id: 6, value: "Runny or blocked nose", label: "Runny or blocked nose" },
+    { id: 7, value: "Sneezing", label: "Sneezing" },
+    { id: 8, value: "Sore throat", label: "Sore throat" },
+    { id: 9, value: "Mild fever", label: "Mild fever" },
+    { id: 10, value: "Persistent coughing", label: "Persistent coughing" },
+    { id: 11, value: "Throat irritation", label: "Throat irritation" },
+    { id: 12, value: "Phlegm production", label: "Phlegm production" },
+    { id: 13, value: "Dry cough", label: "Dry cough" },
+    {
+      id: 14,
+      value: "Wet cough (with mucus)",
+      label: "Wet cough (with mucus)",
+    },
+    {
+      id: 15,
+      value: "Generalized muscle aches",
+      label: "Generalized muscle aches",
+    },
+    { id: 16, value: "Joint pain", label: "Joint pain" },
+    { id: 17, value: "Fatigue", label: "Fatigue" },
+    { id: 18, value: "Rash", label: "Rash" },
+    { id: 19, value: "Itching", label: "Itching" },
+    { id: 20, value: "Redness", label: "Redness" },
+    { id: 21, value: "Blisters", label: "Blisters" },
+    { id: 22, value: "Flaky skin", label: "Flaky skin" },
+    { id: 23, value: "Itchy skin", label: "Itchy skin" },
+    { id: 24, value: "Watery eyes", label: "Watery eyes" },
+    { id: 25, value: "Skin rashes", label: "Skin rashes" },
+    { id: 26, value: "Difficulty breathing", label: "Difficulty breathing" },
+    { id: 27, value: "Stomach pain", label: "Stomach pain" },
+    { id: 28, value: "Bloating", label: "Bloating" },
+    { id: 29, value: "Diarrhea", label: "Diarrhea" },
+    { id: 30, value: "Constipation", label: "Constipation" },
+    { id: 31, value: "Body aches", label: "Body aches" },
+    { id: 32, value: "High fever", label: "High fever" },
+    { id: 33, value: "Dizziness", label: "Dizziness" },
+    { id: 34, value: "Others", label: "Others" },
+  ];
 
   const handleDoseChange = (e) => {
     const doses = e.value;
@@ -191,6 +198,9 @@ export default function Home() {
 
   const handleDateChange = (e) => {
     const date = e.value;
+    if (date) {
+      date.setHours(12); // Set the time to noon to avoid timezone issues
+    }
     const formattedDate = date ? date.toISOString().split("T")[0] : "";
     setFormData({ ...formData, date_of_birth: formattedDate });
   };
@@ -387,7 +397,7 @@ export default function Home() {
         ))}
 
         {/* Symptoms Dropdown */}
-        <div className="flex flex-column justify-content-center gap-2 mb-4">
+        <div className="flex flex-column gap-2 mb-4">
           <label htmlFor="symptomHelp">
             What are your symptoms after the vaccine?
           </label>
@@ -396,12 +406,13 @@ export default function Home() {
             value={formData.symptoms} // Updated for multiple selection
             options={symptomOptions}
             onChange={(e) => setFormData({ ...formData, symptoms: e.value })}
-            optionLabel="label" // Updated to display label with Bengali meanings
+            optionLabel="value"
             placeholder="Select Symptoms"
+            filter
             showClear
+            filterPlaceholder="Search symptoms"
             display="chip" // Displays selected items as chips
             required
-            className="w-full"
           />
         </div>
 
