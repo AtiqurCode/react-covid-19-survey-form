@@ -111,6 +111,7 @@ export default function Home() {
     { id: 32, value: "High fever", label: "High fever" },
     { id: 33, value: "Dizziness", label: "Dizziness" },
     { id: 34, value: "Others", label: "Others" },
+    { id: 35, value: "Nothing", label: "Nothing" },
   ];
 
   const handleDoseChange = (e) => {
@@ -254,7 +255,7 @@ export default function Home() {
             htmlFor="username"
             className={classNames({ "p-error": isFieldInvalid("name") })}
           >
-            Your Name
+            Your Name *
           </label>
           <InputText
             id="name"
@@ -272,7 +273,7 @@ export default function Home() {
             htmlFor="emailLabel"
             className={classNames({ "p-error": isFieldInvalid("email") })}
           >
-            Your Email Address
+            Your Email Address *
           </label>
           <InputText
             id="email"
@@ -294,7 +295,7 @@ export default function Home() {
               "p-error": isFieldInvalid("date_of_birth"),
             })}
           >
-            Date of Birth
+            Date of Birth *
           </label>
           <Calendar
             id="dob"
@@ -344,7 +345,7 @@ export default function Home() {
             htmlFor="division"
             className={classNames({ "p-error": isFieldInvalid("division") })}
           >
-            Your Division
+            Your Division *
           </label>
           <Dropdown
             id="division"
@@ -419,7 +420,7 @@ export default function Home() {
         {/* Problems Textarea */}
         <div className="flex flex-column gap-2 mb-4">
           <label htmlFor="problems">
-            What problems are you facing after the vaccine?
+            What problems are you facing after the vaccine? (Optional)
           </label>
           <InputTextarea
             id="problems"
