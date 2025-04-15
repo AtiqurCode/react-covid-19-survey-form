@@ -110,8 +110,9 @@ export default function Home() {
     { id: 31, value: "Body aches", label: "Body aches" },
     { id: 32, value: "High fever", label: "High fever" },
     { id: 33, value: "Dizziness", label: "Dizziness" },
-    { id: 34, value: "Others", label: "Others" },
-    { id: 35, value: "Nothing", label: "Nothing" },
+    { id: 34, value: "Allergy", label: "Allergy" },
+    { id: 35, value: "Others", label: "Others" },
+    { id: 36, value: "Nothing", label: "Nothing" },
   ];
 
   const handleDoseChange = (e) => {
@@ -409,9 +410,7 @@ export default function Home() {
             onChange={(e) => setFormData({ ...formData, symptoms: e.value })}
             optionLabel="value"
             placeholder="Select Symptoms"
-            filter
             showClear
-            filterPlaceholder="Search symptoms"
             display="chip" // Displays selected items as chips
             required
           />
